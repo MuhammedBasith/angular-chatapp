@@ -1,1 +1,15 @@
-<p>chat works!</p>
+@if (messages) {
+    <div>
+        @for (message of messages; track $index) {
+            <ul>
+                <li>{{ message }}</li>    
+            </ul>
+        }
+    </div>
+}
+
+
+<form>
+    <input type="text" name="message" [(ngModel)]="message">
+    <button (click)="sendMessage()">Send</button>
+</form>
