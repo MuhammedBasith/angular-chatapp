@@ -1,17 +1,32 @@
-import { WebSocketServer } from "ws";
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
-const wss = new WebSocketServer({ port: 4000 }, () => {
-    console.log("Server is listening on port 4000");
+const server = createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Socket.io server is running\n');
 });
 
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+    },
+});
 
-wss.on("connection", (ws) => {
-    console.log("connected");
+io.on('connection', (socket) => {
+    console.log('A user connected');
 
-    ws.on("message", (message) => {
-        console.log(`Received: ${message}`);
+    socket.emit('message', 'Welcome to the Socket.io server!');
+
+    socket.on('message', (msg) => {
+        console.log(`Received: ${msg}`);
     });
 
-    ws.send("Welcome to the WebSocket server!");
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
+    });
 });
 
+server.listen(4000, () => {
+    console.log('Server is listening on port 4000');
+});
