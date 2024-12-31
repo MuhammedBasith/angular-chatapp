@@ -18,8 +18,10 @@ io.on('connection', (socket) => {
 
     socket.emit('message', 'Welcome to the Socket.io server!');
 
+
     socket.on('message', (msg) => {
         console.log(`Received: ${msg}`);
+        socket.broadcast.emit("received", {data: msg, message: "This is a test message from server"})
     });
 
     socket.on('disconnect', () => {
